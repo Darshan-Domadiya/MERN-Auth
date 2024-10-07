@@ -1,11 +1,12 @@
 import { User } from "../models/user.model.js";
+import { setUser } from "../utils/token.js";
 
 async function signUpUser(req, res) {
   const { username, email, password } = req.body;
   // console.log(req.body);
 
   if (!(username && email && password)) {
-    res.status(400).json({ error: true, message: "All field are required!" });
+    res.status(400).json({ error: true, message: "* All field are required!" });
   }
 
   const existingUser = await User.findOne({ $or: [{ username }, { email }] });
@@ -36,14 +37,16 @@ async function signInUser(req, res) {
   const { email, password } = req.body;
 
   if (!(email && password)) {
-    res.status(400).json({ error: true, message: "All field are required! " });
+    res
+      .status(400)
+      .json({ error: true, message: "* All field are required! " });
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
     res.status(404).json({ message: "User does not exists!" });
-  
+  }
 
   const isRightPassword = await user.isPasswordCorrect(password);
 
@@ -51,9 +54,15 @@ async function signInUser(req, res) {
     res.status(404).json({ message: "User's credentials are invalid!" });
   }
 
-  return res
-    .status(200)
-    .json({ error: false, message: "User logged In successfully!" });
+  const token = setUser(user);
+
+  const { password: hashedPassword, ...rest } = user._doc;
+
+  res.status(200).cookie("token", token).json({
+    error: false,
+    message: "User logged In successfully!",
+    user: rest,
+  });
 }
 
 export { signUpUser, signInUser };
