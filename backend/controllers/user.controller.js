@@ -6,13 +6,15 @@ async function signUpUser(req, res) {
   // console.log(req.body);
 
   if (!(username && email && password)) {
-    res.status(400).json({ error: true, message: "* All field are required!" });
+    return res
+      .status(400)
+      .json({ error: true, message: "* All field are required!" });
   }
 
   const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 
   if (existingUser) {
-    res.status(400).json({
+    return res.status(400).json({
       error: true,
       message: "User with mail ID or username already exists",
     });
@@ -25,7 +27,7 @@ async function signUpUser(req, res) {
   });
 
   if (!user) {
-    res
+    return res
       .status(500)
       .json({ error: true, message: "Something went wrong while User Signin" });
   }
@@ -37,7 +39,7 @@ async function signInUser(req, res) {
   const { email, password } = req.body;
 
   if (!(email && password)) {
-    res
+    return res
       .status(400)
       .json({ error: true, message: "* All field are required! " });
   }
@@ -45,13 +47,17 @@ async function signInUser(req, res) {
   const user = await User.findOne({ email });
 
   if (!user) {
-    res.status(404).json({ message: "User does not exists!" });
+    return res
+      .status(404)
+      .json({ error: true, message: "User does not exists!" });
   }
 
   const isRightPassword = await user.isPasswordCorrect(password);
 
   if (!isRightPassword) {
-    res.status(404).json({ message: "User's credentials are invalid!" });
+    return res
+      .status(404)
+      .json({ error: true, message: "User's credentials are invalid!" });
   }
 
   const token = setUser(user);

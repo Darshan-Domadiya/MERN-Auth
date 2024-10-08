@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import { Button, Container, Form, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../../redux/user/userSlice";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
+  const dispatch = useDispatch();
+  const { isLoading, isError } = useSelector((state) => state.user);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,20 +32,20 @@ const SignIn = () => {
     e.preventDefault();
     const { email, password } = formData;
     try {
-      setIsLoading(true);
-      setIsError(false);
+      dispatch(signInStart());
+
       const response = await axios.post("/api/user/v1/signin", {
         email,
         password,
       });
+
       if (response.status === 200) {
-        setIsLoading(false);
-        setIsError(false);
+        dispatch(signInSuccess(response));
+        navigate("/");
         console.log("User logged in successfully!", response);
       }
     } catch (error) {
-      setIsError(true);
-      setErrorMessage(error.response.data.message);
+      dispatch(signInFailure(error));
       console.log("ERROR while sign in!", error);
     }
   };
@@ -86,7 +92,11 @@ const SignIn = () => {
           </b>
         </div>
       </Form>
-      <p className="text-danger">{isError ? errorMessage : ""}</p>
+      <p className="text-danger">
+        {isError
+          ? isError.response?.data?.message || "Something went wrong!"
+          : ""}
+      </p>
     </Container>
   );
 };

@@ -9,7 +9,6 @@ const SignUp = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -40,12 +39,14 @@ const SignUp = () => {
       if (response.status === 201) {
         setIsLoading(false);
         setIsError(false);
+        navigate("/signin");
         console.log("User created!", response);
       }
     } catch (error) {
       setIsError(true);
-      setErrorMessage(error.response.data.message);
+
       console.log("ERROR while signin", error);
+      setIsLoading(false);
     }
   };
 
@@ -100,7 +101,9 @@ const SignUp = () => {
             Sign In
           </b>
         </div>
-        <p className="text-danger text-start">{isError ? errorMessage : ""}</p>
+        <p className="text-danger text-start">
+          {isError ? "Something went wrong!!" : ""}
+        </p>
       </Form>
     </Container>
   );
