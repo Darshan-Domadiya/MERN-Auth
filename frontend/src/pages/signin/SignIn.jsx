@@ -8,6 +8,7 @@ import {
   signInStart,
   signInSuccess,
 } from "../../redux/user/userSlice";
+import OAuth from "../../components/oauth/OAuth";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -82,9 +83,7 @@ const SignIn = () => {
         <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
           {isLoading ? <Spinner /> : "SIGN IN"}
         </Button>
-        <Button className="mt-2 w-50  p-3" variant="danger" type="submit">
-          CONTINUE WITH GOOGLE
-        </Button>
+        <OAuth />
         <div className="text-start w-50 mt-2">
           Don&apos;t Have an Account?{" "}
           <b className="pointer" onClick={handleSignUpClick}>

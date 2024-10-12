@@ -10,7 +10,4 @@ function setUser(user) {
   return jwt.sign(payload, secret);
 }
 
-
-
-
 export { setUser };

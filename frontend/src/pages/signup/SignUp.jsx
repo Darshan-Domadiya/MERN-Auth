@@ -3,6 +3,7 @@ import { Button, Container, Form, Spinner } from "react-bootstrap";
 import "./signup.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import OAuth from "../../components/oauth/OAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const SignUp = () => {
     } catch (error) {
       setIsError(true);
 
-      console.log("ERROR while signin", error);
+      console.log("ERROR while signup", error);
       setIsLoading(false);
     }
   };
@@ -92,9 +93,7 @@ const SignUp = () => {
         <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
           {isLoading ? <Spinner /> : "SIGN UP"}
         </Button>
-        <Button className="mt-2 w-50  p-3" variant="danger" type="submit">
-          CONTINUE WITH GOOGLE
-        </Button>
+        <OAuth />
         <div className="text-start w-50 mt-2">
           Have an Account?{" "}
           <b className="pointer" onClick={handleSignInClick}>
