@@ -17,7 +17,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
-    profileImmage: {
+    profileImage: {
       type: String,
       default:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5khmUDCAdsuzFFIGr-dX9GU6rf7a-cMgzbgaBFB6unBnQn9cmauHaXfdVHqFj6y_6WR8&usqp=CAU",

@@ -96,7 +96,7 @@ async function logInWithGoogle(req, res) {
         req.body.name.split(" ").join("").toLowerCase() +
         Math.floor(Math.random() * 10000).toString(),
       email: req.body.email,
-      profileImmage: req.body.picture,
+      profileImage: req.body.picture,
       password: hashedPassword,
     });
 
