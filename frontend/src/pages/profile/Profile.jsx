@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -28,8 +31,27 @@ const Profile = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Sign Out user
   const signOutuser = () => {};
-  const deleteUserAccount = () => {};
+
+  // Delete user
+  const deleteUserAccount = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(deleteUserStart());
+      const response = await axios.post(
+        `/api/user/v1/delete/${currentUser._id}`
+      );
+
+      if (response.status === 200) {
+        console.log("User deleted successfully!", response);
+        dispatch(deleteUserSuccess());
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
+      console.log("Error while deleting the user!", error);
+    }
+  };
 
   const handleUpdateChange = async (e) => {
     e.preventDefault();

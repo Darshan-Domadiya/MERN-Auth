@@ -121,9 +121,10 @@ async function logInWithGoogle(req, res) {
 
 async function updateUser(req, res) {
   if (req.user._id !== req.params.id) {
-    return res
-      .status(401)
-      .json({ error: true, message: "You can update only your profile!" });
+    return res.status(401).json({
+      error: true,
+      message: "Unauthorized request to update user profile!",
+    });
   }
 
   try {
@@ -161,12 +162,33 @@ async function updateUser(req, res) {
   }
 }
 
-// async function signOutUser(req, res) {
-//   res.clearCookie("token");
+async function deleteUser(req, res) {
+  try {
+    if (req.user._id !== req.params.id) {
+      return res
+        .status(401)
+        .json({ error: true, message: "Unauthorized request to delete user!" });
+    }
 
-//   res
-//     .status(200)
-//     .json({ error: false, message: "User logged out successfully!" });
-// }
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
 
-export { signUpUser, signInUser, logInWithGoogle, updateUser };
+    if (!deletedUser) {
+      return res.status(500).json({
+        error: true,
+        message: "Something went wrong while deleting the user!",
+      });
+    }
+
+    const { password, ...rest } = deletedUser._doc;
+
+    res.status(200).json({
+      error: false,
+      message: "User deleted successfully!",
+      user: rest,
+    });
+  } catch (error) {
+    console.log("ERROR:", error);
+  }
+}
+
+export { signUpUser, signInUser, logInWithGoogle, updateUser, deleteUser };
