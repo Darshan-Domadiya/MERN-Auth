@@ -191,4 +191,18 @@ async function deleteUser(req, res) {
   }
 }
 
-export { signUpUser, signInUser, logInWithGoogle, updateUser, deleteUser };
+async function signOutUser(req, res) {
+  res
+    .clearCookie("token")
+    .status(200)
+    .json({ error: false, message: "Successful signout!" });
+}
+
+export {
+  signUpUser,
+  signInUser,
+  logInWithGoogle,
+  updateUser,
+  deleteUser,
+  signOutUser,
+};

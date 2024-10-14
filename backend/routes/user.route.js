@@ -3,6 +3,7 @@ import {
   deleteUser,
   logInWithGoogle,
   signInUser,
+  signOutUser,
   signUpUser,
   updateUser,
 } from "../controllers/user.controller.js";
@@ -15,5 +16,6 @@ router.route("/signin").post(signInUser);
 router.route("/google").post(logInWithGoogle);
 router.route("/update/:id").post(verifyToken, updateUser);
 router.route("/delete/:id").post(verifyToken, deleteUser);
+router.route("/signout").get(signOutUser);
 
 export default router;

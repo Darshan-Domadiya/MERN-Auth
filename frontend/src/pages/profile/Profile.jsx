@@ -6,6 +6,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOut,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -32,7 +33,19 @@ const Profile = () => {
   };
 
   // Sign Out user
-  const signOutuser = () => {};
+  const signOutuser = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get("/api/user/v1/signout");
+
+      if (response.status === 200) {
+        console.log("User signed out successfully!", response);
+        dispatch(signOut());
+      }
+    } catch (error) {
+      console.log("Error while sign out user!", error);
+    }
+  };
 
   // Delete user
   const deleteUserAccount = async (e) => {
