@@ -4,6 +4,7 @@ import "./signup.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import OAuth from "../../components/oauth/OAuth";
+import SpinnerCom from "../../components/Spinner";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ const SignUp = () => {
         </Form.Group>
 
         <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
-          {isLoading ? <Spinner /> : "SIGN UP"}
+          {isLoading ? <SpinnerCom /> : "SIGN UP"}
         </Button>
         <OAuth />
         <div className="text-start w-50 mt-2">

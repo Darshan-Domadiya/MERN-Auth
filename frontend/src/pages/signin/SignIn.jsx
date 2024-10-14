@@ -9,6 +9,7 @@ import {
   signInSuccess,
 } from "../../redux/user/userSlice";
 import OAuth from "../../components/oauth/OAuth";
+import SpinnerCom from "../../components/Spinner";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -41,9 +42,9 @@ const SignIn = () => {
       });
 
       if (response.status === 200) {
-        dispatch(signInSuccess(response));
-        navigate("/");
+        dispatch(signInSuccess(response.data.user));
         console.log("User logged in successfully!", response);
+        navigate("/");
       }
     } catch (error) {
       dispatch(signInFailure(error));
@@ -81,7 +82,7 @@ const SignIn = () => {
         </Form.Group>
 
         <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
-          {isLoading ? <Spinner /> : "SIGN IN"}
+          {isLoading ? <SpinnerCom /> : "SIGN IN"}
         </Button>
         <OAuth />
         <div className="text-start w-50 mt-2">

@@ -10,4 +10,31 @@ function setUser(user) {
   return jwt.sign(payload, secret);
 }
 
-export { setUser };
+async function verifyToken(req, res, next) {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ error: true, message: "User need to login!" });
+  }
+
+  try {
+    jwt.verify(token, secret, (err, decodedToken) => {
+      if (err) {
+        return res
+          .status(403)
+          .json({ error: true, message: "Token is not valid!" });
+      }
+
+      // console.log("token req.user ", decodedToken);
+
+      req.user = decodedToken;
+      next();
+    });
+  } catch (error) {
+    console.log("ERROR:", error);
+  }
+}
+
+export { setUser, verifyToken };

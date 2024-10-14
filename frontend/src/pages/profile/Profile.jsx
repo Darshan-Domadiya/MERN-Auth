@@ -1,13 +1,129 @@
-import React from "react";
+import axios from "axios";
+import { useState } from "react";
+import { Button, Container, Form, Image } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../../redux/user/userSlice";
+import SpinnerCom from "../../components/Spinner";
 
 const Profile = () => {
+  const { currentUser, isLoading, isError } = useSelector(
+    (state) => state.user
+  );
+
+  const [updateUserData, setUpdateUserData] = useState(false);
+
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+    password: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const signOutuser = () => {};
+  const deleteUserAccount = () => {};
+
+  const handleUpdateChange = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(updateUserStart());
+      const response = await axios.post(
+        `/api/user/v1/update/${currentUser._id}`,
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("User details updated successfully!", response);
+        dispatch(updateUserSuccess(response.data.user));
+        setUpdateUserData(true);
+      }
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+      console.log("Error while updating user details!", error);
+    }
+  };
+
   return (
-    <div>
-      Profile page asdfsdfsdfsdfsf Lorem ipsum dolor sit amet consectetur
-      adipisicing elit. Veniam nemo dolor vero incidunt quo minima nam,
-      aspernatur provident ex temporibus architecto enim eligendi fugiat animi
-      accusantium, saepe aliquid! Nihil, sapiente?
-    </div>
+    <Container className="mt-5 d-flex align-items-center flex-column justify-content-center">
+      <h2>Profile</h2>
+      <Image
+        src={currentUser.profileImage}
+        className="rounded-5 object-fit-cover mt-3"
+      />
+      <Form
+        onSubmit={handleUpdateChange}
+        className="w-100 d-flex flex-column align-items-center justify-content-center mt-3"
+      >
+        <Form.Group className="mt-3 w-50 ">
+          <Form.Control
+            className="p-3 user-input  bg-body-secondary"
+            type="text"
+            placeholder="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleInputChange}
+          />
+        </Form.Group>
+
+        <Form.Group className="mt-3 w-50 ">
+          <Form.Control
+            className="p-3 user-input  bg-body-secondary"
+            type="email"
+            placeholder=" Email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+          />
+        </Form.Group>
+
+        <Form.Group className="mt-3 w-50">
+          <Form.Control
+            className="p-3 user-input bg-body-secondary"
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+          />
+        </Form.Group>
+
+        <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
+          {isLoading ? <SpinnerCom /> : "UPDATE"}
+        </Button>
+
+        <div className="w-50 mt-2 d-flex align-items-center justify-content-between">
+          <span
+            className="text-danger fw-bold pointer"
+            onClick={deleteUserAccount}
+          >
+            Delete Account
+          </span>
+          <span className="text-danger fw-bold pointer" onClick={signOutuser}>
+            Sign Out
+          </span>
+        </div>
+      </Form>
+      <p className="text-danger fw-bolder">
+        {isError && "Something went Wrong!"}
+      </p>
+
+      <p className="text-success fw-bolder">
+        {updateUserData && "User updated suceessfully!"}
+      </p>
+    </Container>
   );
 };
 

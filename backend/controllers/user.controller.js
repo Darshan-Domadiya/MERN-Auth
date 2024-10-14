@@ -119,4 +119,54 @@ async function logInWithGoogle(req, res) {
   }
 }
 
-export { signUpUser, signInUser, logInWithGoogle };
+async function updateUser(req, res) {
+  if (req.user._id !== req.params.id) {
+    return res
+      .status(401)
+      .json({ error: true, message: "You can update only your profile!" });
+  }
+
+  try {
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updateUser) {
+      return res
+        .status(500)
+        .json({ error: true, message: "Internal server error!" });
+    }
+
+    const { password, ...rest } = updatedUser._doc;
+
+    res.status(200).json({
+      error: false,
+      message: "User updated successfully!",
+      user: rest,
+    });
+  } catch (error) {
+    console.log("Error while updating user profile!", error);
+  }
+}
+
+// async function signOutUser(req, res) {
+//   res.clearCookie("token");
+
+//   res
+//     .status(200)
+//     .json({ error: false, message: "User logged out successfully!" });
+// }
+
+export { signUpUser, signInUser, logInWithGoogle, updateUser };

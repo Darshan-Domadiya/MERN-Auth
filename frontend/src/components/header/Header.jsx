@@ -19,7 +19,7 @@ const Header = () => {
       <Container>
         <Navbar.Brand href="/">Auth App</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
+        <Navbar.Collapse id="responsive-navbar-nav ">
           <Nav className="me-auto"></Nav>
           <Nav>
             <Nav.Link href="/">Home</Nav.Link>
@@ -31,7 +31,7 @@ const Header = () => {
                 alt="profle"
                 width="35px"
                 height="35px"
-                className="object-fit-cover rounded-5 mt-1 "
+                className="object-fit-cover rounded-5 mt-1 mx-1"
                 onClick={handleProfileImageClick}
               />
             ) : (
