@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,6 +12,13 @@ import {
   updateUserSuccess,
 } from "../../redux/user/userSlice";
 import SpinnerCom from "../../components/Spinner";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../firebase";
 
 const Profile = () => {
   const { currentUser, isLoading, isError } = useSelector(
@@ -19,6 +26,12 @@ const Profile = () => {
   );
 
   const [updateUserData, setUpdateUserData] = useState(false);
+  const fileRef = useRef(null);
+  const [image, setImage] = useState(undefined);
+  const [imagePercentage, setImagePercentage] = useState(0);
+  const [profileImageData, setProfileImageData] = useState({});
+  const [imageError, setImageError] = useState(false);
+  console.log(profileImageData);
 
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -66,6 +79,7 @@ const Profile = () => {
     }
   };
 
+  // Update user profile details.
   const handleUpdateChange = async (e) => {
     e.preventDefault();
 
@@ -77,6 +91,8 @@ const Profile = () => {
           username: formData.username,
           email: formData.email,
           password: formData.password,
+          profileImage:
+            profileImageData.profileImage || currentUser.profileImage,
         }
       );
 
@@ -91,17 +107,83 @@ const Profile = () => {
     }
   };
 
+  useEffect(() => {
+    if (image) {
+      handleImageUpload(image);
+    }
+  }, [image]);
+
+  const handleImageUpload = async (image) => {
+    try {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + image.name;
+
+      const storageRef = ref(storage, fileName);
+
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setImagePercentage(Math.round(progress));
+        },
+        (error) => {
+          setImageError(true);
+          console.log("ERROR in uploading image!", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) =>
+            setProfileImageData({
+              ...profileImageData,
+              profileImage: downloadUrl,
+            })
+          );
+        }
+      );
+    } catch (error) {
+      console.log("ERROR while uploading image to the firebase!", error);
+    }
+  };
+
   return (
     <Container className="mt-5 d-flex align-items-center flex-column justify-content-center">
       <h2>Profile</h2>
-      <Image
-        src={currentUser.profileImage}
-        className="rounded-5 object-fit-cover mt-3"
+      <input
+        type="file"
+        ref={fileRef}
+        hidden
+        accept="image/*"
+        onChange={(e) => setImage(e.target.files[0])}
       />
+
       <Form
         onSubmit={handleUpdateChange}
-        className="w-100 d-flex flex-column align-items-center justify-content-center mt-3"
+        className="w-100 d-flex flex-column align-items-center justify-content-center"
       >
+        <Image
+          src={profileImageData.profileImage || currentUser.profileImage}
+          className="rounded-5 object-fit-cover mt-3"
+          onClick={() => fileRef.current.click()}
+          height="100px"
+          width="100px"
+        />
+
+        {imageError ? (
+          <span className="text-danger fw-medium">
+            Error uploading image (file size must be less than 2 MB)
+          </span>
+        ) : imagePercentage > 0 && imagePercentage < 100 ? (
+          <span>{`Uploading : ${imagePercentage} %`}</span>
+        ) : imagePercentage === 100 ? (
+          <span className="text-success fw-medium">
+            Image uploaded successfully!
+          </span>
+        ) : (
+          ""
+        )}
+
         <Form.Group className="mt-3 w-50 ">
           <Form.Control
             className="p-3 user-input  bg-body-secondary"

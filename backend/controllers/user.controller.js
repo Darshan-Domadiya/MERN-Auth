@@ -139,6 +139,7 @@ async function updateUser(req, res) {
           username: req.body.username,
           password: req.body.password,
           email: req.body.email,
+          profileImage: req.body.profileImage,
         },
       },
       { new: true }
