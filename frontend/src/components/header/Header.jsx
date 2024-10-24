@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import "./header.scss";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,7 +18,11 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-secondary">
       <Container>
-        <Navbar.Brand href="/">Auth App</Navbar.Brand>
+        <Navbar.Brand href="/" className="fw-bold">
+          {" "}
+          <span className="auth-style">Auth</span>
+          <span className="app-style">App</span>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav ">
           <Nav className="me-auto"></Nav>

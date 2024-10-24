@@ -67,6 +67,7 @@ const SignIn = () => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
+            autoComplete="off"
           />
         </Form.Group>
 

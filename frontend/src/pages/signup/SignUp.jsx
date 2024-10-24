@@ -67,6 +67,7 @@ const SignUp = () => {
             name="username"
             value={formData.username}
             onChange={handleInputChange}
+            autoComplete="off"
           />
         </Form.Group>
         <Form.Group className="mt-3 w-50 ">
@@ -77,6 +78,7 @@ const SignUp = () => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
+            autoComplete="off"
           />
         </Form.Group>
 
