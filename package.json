@@ -1,27 +1,14 @@
 {
-<<<<<<< HEAD
   "name": "mern_auth",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config backend/server.js",
-    "build": "npm install --prefix frontend && npm run build --prefix frontend"
+    "start": "node backend/server.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "license": "ISC",
   "description": "mern auth project",
   "dependencies": {
-=======
-	"name": "mern_auth",
-	"version": "1.0.0",
-	"main": "index.js",
-	"scripts": {
-		"start": "node backend/server.js",
-		"build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
-	},
-	"license": "ISC",
-	"description": "mern auth project",
-	 "dependencies": {
->>>>>>> 1e2c968a7bb764fab43e2f6c6f33acc4e66ae6b6
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
