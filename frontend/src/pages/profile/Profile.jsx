@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Button, Container, Form, Image } from "react-bootstrap";
+import { Button, Container, Form, Image, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteUserFailure,
@@ -148,98 +148,108 @@ const Profile = () => {
   };
 
   return (
-    <Container className="mt-5 d-flex align-items-center flex-column justify-content-center">
+    <Container
+      fluid
+      className="mt-5 d-flex align-items-center flex-column justify-content-center"
+    >
       <h2>Profile</h2>
-      <input
-        type="file"
-        ref={fileRef}
-        hidden
-        accept="image/*"
-        onChange={(e) => setImage(e.target.files[0])}
-      />
-
-      <Form
-        onSubmit={handleUpdateChange}
-        className="w-100 d-flex flex-column align-items-center justify-content-center"
-      >
-        <Image
-          src={profileImageData.profileImage || currentUser.profileImage}
-          className="rounded-5 object-fit-cover mt-3"
-          onClick={() => fileRef.current.click()}
-          height="100px"
-          width="100px"
-        />
-
-        {imageError ? (
-          <span className="text-danger fw-medium">
-            Error uploading image (file size must be less than 2 MB)
-          </span>
-        ) : imagePercentage > 0 && imagePercentage < 100 ? (
-          <span>{`Uploading : ${imagePercentage} %`}</span>
-        ) : imagePercentage === 100 ? (
-          <span className="text-success fw-medium">
-            Image uploaded successfully!
-          </span>
-        ) : (
-          ""
-        )}
-
-        <Form.Group className="mt-3 w-50 ">
-          <Form.Control
-            className="p-3 user-input  bg-body-secondary"
-            type="text"
-            placeholder="Username"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
+      <Row className="w-100">
+        <Col xs={12} md={8} lg={8} xl={6} className="mx-auto">
+          <input
+            type="file"
+            ref={fileRef}
+            hidden
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
           />
-        </Form.Group>
 
-        <Form.Group className="mt-3 w-50 ">
-          <Form.Control
-            className="p-3 user-input  bg-body-secondary"
-            type="email"
-            placeholder=" Email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mt-3 w-50">
-          <Form.Control
-            className="p-3 user-input bg-body-secondary"
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
-
-        <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
-          {isLoading ? <SpinnerCom /> : "UPDATE"}
-        </Button>
-
-        <div className="w-50 mt-2 d-flex align-items-center justify-content-between">
-          <span
-            className="text-danger fw-bold pointer"
-            onClick={deleteUserAccount}
+          <Form
+            onSubmit={handleUpdateChange}
+            className="d-flex flex-column align-items-center justify-content-center"
           >
-            Delete Account
-          </span>
-          <span className="text-danger fw-bold pointer" onClick={signOutuser}>
-            Sign Out
-          </span>
-        </div>
-      </Form>
-      <p className="text-danger fw-bolder">
-        {isError && "Something went Wrong!"}
-      </p>
+            <Image
+              src={profileImageData.profileImage || currentUser.profileImage}
+              className="rounded-5 object-fit-cover mt-3"
+              onClick={() => fileRef.current.click()}
+              height="100px"
+              width="100px"
+            />
 
-      <p className="text-success fw-bolder">
-        {updateUserData && "User updated suceessfully!"}
-      </p>
+            {imageError ? (
+              <span className="text-danger fw-medium">
+                Error uploading image (file size must be less than 2 MB)
+              </span>
+            ) : imagePercentage > 0 && imagePercentage < 100 ? (
+              <span>{`Uploading : ${imagePercentage} %`}</span>
+            ) : imagePercentage === 100 ? (
+              <span className="text-success fw-medium">
+                Image uploaded successfully!
+              </span>
+            ) : (
+              ""
+            )}
+
+            <Form.Group className="mt-3 w-100 ">
+              <Form.Control
+                className="p-3 user-input  bg-body-secondary"
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mt-3 w-100 ">
+              <Form.Control
+                className="p-3 user-input  bg-body-secondary"
+                type="email"
+                placeholder=" Email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mt-3 w-100">
+              <Form.Control
+                className="p-3 user-input bg-body-secondary"
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+
+            <Button className="w-100 mt-3 p-3" variant="dark" type="submit">
+              {isLoading ? <SpinnerCom /> : "UPDATE"}
+            </Button>
+
+            <div className="w-100 mt-2 d-flex align-items-center justify-content-between">
+              <span
+                className="text-danger fw-bold pointer"
+                onClick={deleteUserAccount}
+              >
+                Delete Account
+              </span>
+              <span
+                className="text-danger fw-bold pointer"
+                onClick={signOutuser}
+              >
+                Sign Out
+              </span>
+            </div>
+          </Form>
+          <p className="text-danger fw-bolder">
+            {isError && "Something went Wrong!"}
+          </p>
+
+          <p className="text-success fw-bolder">
+            {updateUserData && "User updated suceessfully!"}
+          </p>
+        </Col>
+      </Row>
     </Container>
   );
 };
