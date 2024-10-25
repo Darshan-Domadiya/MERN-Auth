@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Form, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,46 +53,54 @@ const SignIn = () => {
   };
 
   return (
-    <Container className="mt-5 d-flex align-items-center flex-column justify-content-center">
+    <Container
+      fluid
+      className="mt-5 d-flex align-items-center flex-column justify-content-center"
+    >
       <h2>Sign In</h2>
-      <Form
-        onSubmit={handleSignIn}
-        className="w-100 d-flex flex-column align-items-center justify-content-center  "
-      >
-        <Form.Group className="mt-3 w-50 ">
-          <Form.Control
-            className="p-3 user-input  bg-body-secondary"
-            type="email"
-            placeholder=" Email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </Form.Group>
+      <Row className="w-100">
+        <Col xs={12} md={8} lg={6} xl={4} className="mx-auto">
+          <Form
+            onSubmit={handleSignIn}
+            className=" d-flex flex-column align-items-center justify-content-center  "
+          >
+            <Form.Group className="mt-3 w-100 form-input">
+              <Form.Control
+                className="p-3  user-input  bg-body-secondary"
+                type="email"
+                placeholder=" Email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                autoComplete="off"
+              />
+            </Form.Group>
 
-        <Form.Group className="mt-3 w-50">
-          <Form.Control
-            className="p-3 user-input bg-body-secondary"
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
+            <Form.Group className="mt-3 w-100">
+              <Form.Control
+                className="p-3 user-input bg-body-secondary"
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
 
-        <Button className="w-50 mt-3 p-3" variant="dark" type="submit">
-          {isLoading ? <SpinnerCom /> : "SIGN IN"}
-        </Button>
-        <OAuth />
-        <div className="text-start w-50 mt-2">
-          Don&apos;t Have an Account?{" "}
-          <b className="pointer" onClick={handleSignUpClick}>
-            Sign Up
-          </b>
-        </div>
-      </Form>
+            <Button className="mt-3 w-100 p-3" variant="dark" type="submit">
+              {isLoading ? <SpinnerCom /> : "SIGN IN"}
+            </Button>
+            <OAuth />
+            <div className="text-start  mt-2">
+              Don&apos;t Have an Account?{" "}
+              <b className="pointer" onClick={handleSignUpClick}>
+                Sign Up
+              </b>
+            </div>
+          </Form>
+        </Col>
+      </Row>
+
       <p className="text-danger">
         {isError
           ? isError.response?.data?.message || "Something went wrong!"

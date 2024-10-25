@@ -38,7 +38,7 @@ const OAuth = () => {
     <Button
       type="button"
       onClick={handleGoogleSignInClick}
-      className="mt-2 w-50  p-3"
+      className="mt-2 w-100  p-3"
       variant="danger"
     >
       CONTINUE WITH GOOGLE
